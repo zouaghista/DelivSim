@@ -1,0 +1,61 @@
+{
+  "deltaTime": 0.1,
+  "vehicles": [
+    {
+      "id": "v0",
+      "type": "drone",
+      "metadata": {
+        "location": [0,0],
+        "charge": 100,
+        "chargeToUnitCost": 2.75,
+        "speed": 1,
+        "_comment": "chabeb hetheya comment XD, speed 1 unit per second ou charge to unit cost is how much the drone  spends to move 1 unit implement your own logic + params"
+      }
+    }
+  ],
+  "structures": [
+    {
+      "id": "S0",
+      "type": "storage",
+      "location": [0, 0],
+      "contents": {
+        "Milk": 5,
+        "Gazouz": 50
+      }
+    }
+  ],
+  "clients": [
+    {
+      "id": "C0",
+      "location": [10,10]
+    },
+    {
+      "id": "C1",
+      "location": [20,10]
+    },
+    {
+      "id": "C2",
+      "location": [30,-10]
+    }
+  ],
+  "orders:": [
+    {
+      "id": "O0",
+      "client_id": "C0",
+      "time": 10,
+      "limit": 25,
+      "contents": {
+        "Milk": 1
+      }
+    },
+    {
+      "id": "O1",
+      "client_id": "C1",
+      "time": 9.5,
+      "limit": 17.5,
+      "contents": {
+        "Gazouz": 1
+      }
+    }
+  ]
+}
