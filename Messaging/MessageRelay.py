@@ -1,10 +1,14 @@
 from bisect import bisect_left
-from MessageManager import *
+from Messaging.Messages import MessageRef
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from Messaging.MessageManager import MessageManager
 
 
 class MessageRelay:
 
-    def __init__(self, messageManager: MessageManager, identifier: str):
+    def __init__(self, messageManager: "MessageManager", identifier: str):
         self._messageManager = messageManager
         self._messages: list[MessageRef] = []
         self._id = identifier

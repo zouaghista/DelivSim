@@ -8,11 +8,22 @@ class DroneVehicle(Vehicle):
 
     def __init__(self, messageRelay: MessageRelay, taskRegistry: TaskRegistry, state: dict[str, any], vehicle_id: str):
         super(DroneVehicle, self).__init__(messageRelay, taskRegistry, vehicle_id)
-        assert 0 <= state["charge"] <= 100
-        assert "location" in state.keys()
-        assert state["speed"] > 0
-        assert state["chargeToUnitCost"] > 0
+        assert 0 <= state['metadata']["charge"] <= 100
+        assert "location" in state['metadata'].keys()
+        assert state['metadata']["speed"] > 0
+        assert state['metadata']["chargeToUnitCost"] > 0
+        state['charge'] = state['metadata']["charge"]
+        state['speed'] = state['metadata']["speed"]
+        state['location'] = state['metadata']["location"]
+        state['chargeToUnitCost'] = state['metadata']["chargeToUnitCost"]
+        del state['metadata']
         self.UpdateState(state)
+
+    def Simulate(self, messages: list[str], time: float):
+        if len(self.GetAllTasks()) == 0:
+            print("adding new task")
+            flyDroneTask = FlyDroneTask(self, {"target": [10,10]})
+            self.RegisterTask(flyDroneTask)
 
 
 class FlyDroneTask(GenericTask):
@@ -42,13 +53,17 @@ class FlyDroneTask(GenericTask):
             "location": [new_x, new_y],
             "charge": new_charge
         }
+        print(new_state)
         self._vehicle.UpdateState(new_state)
         return False
 
     def finalizeTask(self):
-        self._finalization_callback()
+        print("passed")
+        self._vehicle.UpdateState({
+            "location": self._target
+        })
 
-    def __init__(self, callback, vehicle: Vehicle, params: dict[str, any]):
-        super().__init__(callback, vehicle, params)
+    def __init__(self, vehicle: Vehicle, params: dict[str, any]):
+        super().__init__(vehicle, params)
         assert len(params['target']) == 2
         self._target = params['target']

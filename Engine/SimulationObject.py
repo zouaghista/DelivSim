@@ -24,6 +24,7 @@ class ActiveSimulationObject(ABC):
         return self._state[state_property]
 
     def RegisterTask(self, task: GenericTask):
+        self._active_Tasks.append(task)
         self._taskRegistry.RegisterTask(task)
 
     def GetAllTasks(self) -> list[GenericTask]:

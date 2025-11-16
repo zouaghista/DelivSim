@@ -19,3 +19,6 @@ class ScenarioInterpreter:
 
     def GetClients(self) -> list[dict]:
         return self.data["clients"]
+
+    def GetDeltaTime(self) -> float:
+        return self.data["deltaTime"]

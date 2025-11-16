@@ -1,6 +1,5 @@
 import uuid
 from typing import Callable
-
 from Messaging.MessageRelay import MessageRelay
 from Messaging.Messages import GlobalMessage, MessageRef
 

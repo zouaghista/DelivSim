@@ -17,8 +17,8 @@ class TaskRegistry:
 
     def SimulateAllTasks(self, deltaTime: float):
         for task in self._active_tasks:
-            if task.simulateTask(deltaTime):
-                task.finalizeTask()
+            if task._simulateTask(deltaTime):
+                task._finalizeTask()
         for task in self._active_tasks.copy():
             if task.is_task_done():
                 self._active_tasks.remove(task)

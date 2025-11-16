@@ -1,15 +1,15 @@
 import json
 from abc import ABC, abstractmethod
 import hashlib
-from typing import Dict
+from typing import Dict, TYPE_CHECKING
 
-from Vehicles.Vehicle import Vehicle
+if TYPE_CHECKING:
+    from Vehicles.Vehicle import Vehicle
 
 
 class GenericTask(ABC):
 
-    def __init__(self, callback, vehicle: Vehicle, params: dict[str, any]):
-        self._finalization_callback = callback
+    def __init__(self, vehicle: "Vehicle", params: dict[str, any]):
         self._vehicle = vehicle
         self._task_done = False
         self._params = params
@@ -56,8 +56,8 @@ class GenericSharedTask(GenericTask):
     peer_dict: Dict[bytes, list[GenericTask]] = {}
     score_dict: Dict[bytes, int] = {}
 
-    def __init__(self, callback, vehicle: Vehicle, params: dict[str, any], peers: list[Vehicle]):
-        super().__init__(callback, vehicle, params)
+    def __init__(self, vehicle: "Vehicle", params: dict[str, any], peers: list["Vehicle"]):
+        super().__init__(vehicle, params)
         self.peers = peers
         self._finalized = False
         vehicle_list = peers.copy()
