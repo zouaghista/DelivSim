@@ -12,10 +12,12 @@ class DroneVehicle(Vehicle):
         assert "location" in state['metadata'].keys()
         assert state['metadata']["speed"] > 0
         assert state['metadata']["chargeToUnitCost"] > 0
+        assert state['type'] == "drone"
         state['charge'] = state['metadata']["charge"]
         state['speed'] = state['metadata']["speed"]
         state['location'] = state['metadata']["location"]
         state['chargeToUnitCost'] = state['metadata']["chargeToUnitCost"]
+        state["payload"] = []
         del state['metadata']
         self.UpdateState(state)
 
@@ -29,10 +31,10 @@ class DroneVehicle(Vehicle):
 class FlyDroneTask(GenericTask):
 
     def simulateTask(self, deltaTime: float) -> bool:
-        speed = self._vehicle.GetState("speed")
-        chargeToUnitCost = self._vehicle.GetState("chargeToUnitCost")
-        location = self._vehicle.GetState("location")
-        charge = self._vehicle.GetState("charge")
+        speed = self._owner.GetState("speed")
+        chargeToUnitCost = self._owner.GetState("chargeToUnitCost")
+        location = self._owner.GetState("location")
+        charge = self._owner.GetState("charge")
         current_x, current_y = location
         target_x, target_y = self._target
         dir_x = target_x - current_x
@@ -54,12 +56,12 @@ class FlyDroneTask(GenericTask):
             "charge": new_charge
         }
         print(new_state)
-        self._vehicle.UpdateState(new_state)
+        self._owner.UpdateState(new_state)
         return False
 
     def finalizeTask(self):
         print("passed")
-        self._vehicle.UpdateState({
+        self._owner.UpdateState({
             "location": self._target
         })
 

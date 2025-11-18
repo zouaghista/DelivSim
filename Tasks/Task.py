@@ -4,13 +4,13 @@ import hashlib
 from typing import Dict, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Vehicles.Vehicle import Vehicle
+    from Engine.SimulationObject import ActiveSimulationObject
 
 
 class GenericTask(ABC):
 
-    def __init__(self, vehicle: "Vehicle", params: dict[str, any]):
-        self._vehicle = vehicle
+    def __init__(self, owner: "ActiveSimulationObject", params: dict[str, any]):
+        self._owner = owner
         self._task_done = False
         self._params = params
 
@@ -56,16 +56,16 @@ class GenericSharedTask(GenericTask):
     peer_dict: Dict[bytes, list[GenericTask]] = {}
     score_dict: Dict[bytes, int] = {}
 
-    def __init__(self, vehicle: "Vehicle", params: dict[str, any], peers: list["Vehicle"]):
-        super().__init__(vehicle, params)
+    def __init__(self, owner: "ActiveSimulationObject", params: dict[str, any], peers: list["ActiveSimulationObject"]):
+        super().__init__(owner, params)
         self.peers = peers
         self._finalized = False
-        vehicle_list = peers.copy()
-        vehicle_list.append(vehicle)
-        vehicle_list = sorted(vehicle_list, key=lambda item: item.vehicle_id)
+        peer_list = peers.copy()
+        peer_list.append(owner)
+        peer_list = sorted(peer_list, key=lambda item: item.vehicle_id)
         concat = self.__class__.__name__
         concat += json.dumps(params, sort_keys=True, separators=(',', ':'))
-        concat += "".join(vehicle.GetId() for vehicle in vehicle_list)
+        concat += "".join(vehicle.GetId() for vehicle in peer_list)
         task_hash = hashlib.sha256(concat.encode("utf-8")).digest()
         if task_hash not in GenericSharedTask.peer_dict.keys():
             GenericSharedTask.peer_dict[task_hash] = [self]

@@ -10,8 +10,16 @@ class MessageManager:
         self._messageContext = {}
         self._relays: dict[str, MessageRelay] = {}
         self._timing_function = timingFunction
+        self._elapsed_time = 0
+
+    def SetTime(self, time: float):
+        self._elapsed_time = time
+
+    def GetTime(self) -> float:
+        return self._elapsed_time
 
     def NewRelay(self, identifier: str) -> MessageRelay:
+        assert identifier not in self._relays.keys()
         newRelay = MessageRelay(self, identifier)
         self._relays[identifier] = newRelay
         return newRelay

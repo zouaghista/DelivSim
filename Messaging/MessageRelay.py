@@ -17,10 +17,10 @@ class MessageRelay:
         index = bisect_left([m.timing for m in self._messages], message.timing)
         self._messages.insert(index, message)
 
-    def GetMessages(self, timing: float) -> list[str]:
+    def GetMessages(self) -> list[str]:
         current_messages = []
         for message in self._messages:
-            if message.timing <= timing:
+            if message.timing <= self._messageManager.GetTime():
                 current_messages.append(self._messageManager.FetchMessage(message.identifier))
         return current_messages
 

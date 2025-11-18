@@ -6,12 +6,16 @@ from Tasks.TaskRegistry import TaskRegistry
 
 class ActiveSimulationObject(ABC):
 
-    def __init__(self, messageRelay: MessageRelay, taskRegistry: TaskRegistry):
+    def __init__(self, messageRelay: MessageRelay, taskRegistry: TaskRegistry, object_id):
         self._messageRelay = messageRelay
         self._taskRegistry = taskRegistry
         self._state: dict[str, any] = {}
         self._active_Tasks: list[GenericTask] = []
         self._active = True
+        self._id = object_id
+
+    def GetId(self):
+        return self._id
 
     def UpdateState(self, updates: dict[str, any]):
         for key, value in updates.items():
@@ -51,13 +55,13 @@ class ActiveSimulationObject(ABC):
     def Is_Active(self):
         return self._active
 
-    def _send_message(self, content: str, recipientId: str):
+    def Send_message(self, content: str, recipientId: str):
         self._messageRelay.SendMessage(content, recipientId)
 
     def _simulateTurn(self, timing: float):
         if not self._active:
             return
-        messages = self._messageRelay.GetMessages(timing)
+        messages = self._messageRelay.GetMessages()
         self.Simulate(messages, timing)
 
     def Simulate(self, messages: list[str], time: float):
